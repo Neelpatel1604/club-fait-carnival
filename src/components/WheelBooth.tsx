@@ -6,12 +6,14 @@ import { burstConfetti } from "@/lib/utils";
 
 /** Ticket payout for each wheel segment (shown on the wheel). */
 const SEGMENT_TICKETS = [1, 2, 3, 5, 1, 2, 3, 4];
+const MAX_SPINS = 3;
 
 export function WheelBooth() {
   const { addTickets } = useTickets();
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [lastWin, setLastWin] = useState<number | null>(null);
+  const [spinsLeft, setSpinsLeft] = useState(MAX_SPINS);
   const rotationRef = useRef(0);
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -20,9 +22,10 @@ export function WheelBooth() {
   }, [rotation]);
 
   function spin() {
-    if (spinning) return;
+    if (spinning || spinsLeft <= 0) return;
     setSpinning(true);
     setLastWin(null);
+    setSpinsLeft((n) => n - 1);
 
     const targetIndex = Math.floor(Math.random() * SEGMENT_TICKETS.length);
     const desiredAngleAtTop = targetIndex * 45 + 22.5;
@@ -43,6 +46,8 @@ export function WheelBooth() {
       }
     }, 4100);
   }
+
+  const outOfSpins = spinsLeft <= 0;
 
   return (
     <section className="booth b1">
@@ -91,13 +96,26 @@ export function WheelBooth() {
               {lastWin === 1 ? "" : "s"}!
             </p>
           )}
+          <p className="wheel-spins" aria-live="polite">
+            {outOfSpins ? (
+              <>No spins left</>
+            ) : (
+              <>
+                Spins left: <strong>{spinsLeft}</strong>/{MAX_SPINS}
+              </>
+            )}
+          </p>
           <button
             className="booth-btn"
             type="button"
             onClick={spin}
-            disabled={spinning}
+            disabled={spinning || outOfSpins}
           >
-            {spinning ? "🎡 Spinning..." : "🎡 Spin the Wheel"}
+            {spinning
+              ? "🎡 Spinning..."
+              : outOfSpins
+                ? "No spins left"
+                : "🎡 Spin the Wheel"}
           </button>
         </div>
       </div>

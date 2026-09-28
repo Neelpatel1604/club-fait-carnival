@@ -18,6 +18,7 @@ export function MemoryBooth() {
   const [matched, setMatched] = useState<Set<string>>(new Set());
   const [moves, setMoves] = useState(0);
   const [lock, setLock] = useState(false);
+  const [roundDone, setRoundDone] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
   const awardedRef = useRef(false);
 
@@ -41,6 +42,7 @@ export function MemoryBooth() {
   useEffect(() => {
     if (matched.size === services.length && !awardedRef.current) {
       awardedRef.current = true;
+      setRoundDone(true);
       const earned = Math.max(2, 12 - Math.max(0, moves - 6));
       addTickets(earned);
       const rect = gridRef.current?.getBoundingClientRect();
@@ -117,9 +119,21 @@ export function MemoryBooth() {
           </span>
         </div>
         <div style={{ marginTop: 16, textAlign: "center" }}>
-          <button className="booth-btn" type="button" onClick={build}>
-            🔄 New Round
-          </button>
+          {roundDone ? (
+            <>
+              <p className="memory-round-msg" aria-live="polite">
+                Round complete — one game only
+              </p>
+              <button
+                className="booth-btn"
+                type="button"
+                disabled
+                aria-disabled="true"
+              >
+                No rematch
+              </button>
+            </>
+          ) : null}
         </div>
       </div>
     </section>

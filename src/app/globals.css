@@ -650,6 +650,18 @@ button {
   color: var(--ink);
 }
 
+.wheel-spins {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #4b4234;
+  text-align: center;
+}
+
+.wheel-spins strong {
+  color: var(--ink);
+}
+
 /* ---------- wheel booth ---------- */
 .wheel-stage {
   display: flex;
@@ -848,6 +860,14 @@ button {
   font-weight: 600;
   color: #4b4234;
   font-size: 0.92rem;
+}
+
+.memory-round-msg {
+  margin: 0 0 12px;
+  font-family: var(--font-baloo), cursive;
+  font-size: 1.15rem;
+  color: #b35f00;
+  text-align: center;
 }
 
 /* ---------- fortune teller ---------- */
